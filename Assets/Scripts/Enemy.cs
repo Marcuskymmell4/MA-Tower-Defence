@@ -1,0 +1,31 @@
+using UnityEngine;
+
+public class Enemy : MonoBehaviour
+{
+
+    public float Speed = 2f;
+    public int health = 1;
+    public Transform[] waypoints;
+
+    public int currentWayPoint;
+    void Update()
+    {
+        if (waypoints == null || waypoints.Length == 0) return;
+
+        Transform target = waypoints[currentWayPoint];
+        Vector3 dir = (target.position - transform.position).normalized;
+
+        transform.position += dir * Speed * Time.deltaTime;
+
+        if(Vector3.Distance(transform.position, target.position) < 0.05f)
+        {
+            currentWayPoint++;
+
+            if(currentWayPoint >= waypoints.Length)
+            {
+                HealthManager.Instance.UpdateHealth(-1);
+                Destroy(gameObject);
+            }
+        }
+    }
+}
